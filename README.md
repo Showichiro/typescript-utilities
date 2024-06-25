@@ -1,5 +1,8 @@
 # utilities
 
+[![codecov](https://codecov.io/gh/Showichiro/typescript-utilities/graph/badge.svg?token=7AYSBYJCF0)](https://codecov.io/gh/Showichiro/typescript-utilities)
+[![JSR](https://jsr.io/badges/@showichiro/utilities)](https://jsr.io/@showichiro/utilities)
+
 In this repository, we provide utility functions related to functions, objects,
 and arrays. These functions are written in TypeScript and designed to maintain
 type safety.
