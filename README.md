@@ -60,6 +60,18 @@ const omitted = $omit(user, ["email"]); // omitted = { id: 1, name: 'John Doe' }
 console.log(omitted.email); // Output: undefined
 ```
 
+## array
+
+```ts
+import { $unique } from "@uchihori/utilities/array";
+
+const numbers = [1, 2, 3, 2, 1];
+const uniqueNumbers = $unique(numbers);
+console.log(uniqueNumbers); // Output: [1, 2, 3]
+```
+
+unique by customized key
+
 ```ts
 import { $unique } from "@uchihori/utilities/array";
 
@@ -84,16 +96,6 @@ const uniquePeople = $unique(
 
 console.log(uniquePeople);
 // Output: [{ name: "Alice", age: 30 }, { name: "Bob", age: 25 }, { name: "Charlie", age: 25 }, { name: "David", age: 35 }]
-```
-
-## array
-
-```ts
-import { $unique } from "@uchihori/utilities/array";
-
-const numbers = [1, 2, 3, 2, 1];
-const uniqueNumbers = $unique(numbers);
-console.log(uniqueNumbers); // Output: [1, 2, 3]
 ```
 
 ```ts
