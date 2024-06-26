@@ -4,8 +4,8 @@
 [![JSR](https://jsr.io/badges/@showichiro/utilities)](https://jsr.io/@showichiro/utilities)
 
 In this repository, we provide utility functions related to functions, objects,
-and arrays. These functions are written in TypeScript and designed to maintain
-type safety.
+, arrays and types. These functions are written in TypeScript and designed to
+maintain type safety.
 
 ## functions
 
@@ -111,4 +111,126 @@ const groupedByCity = $groupBy(users, (user) => user.city);
 
 console.log(groupedByCity);
 // Output: { Tokyo: [{ id: 1, city: 'Tokyo' }, { id: 3, city: 'Tokyo' }], Osaka: [{ id: 2, city: 'Osaka' }] }
+```
+
+```ts
+import { $drop } from "@uchihori/utilities/array";
+
+const numbers = [1, 2, 3, 4, 5];
+const droppedNumbers = $drop(numbers, 1);
+console.log(droppedNumbers); // Output: [2, 3, 4, 5]
+```
+
+```ts
+import { $dropRight } from "@uchihori/utilities/array";
+
+const numbers = [1, 2, 3, 4, 5];
+const droppedFromEnd = $dropRight(numbers, 1);
+
+console.log(droppedFromEnd); // Output: [1, 2, 3, 4]
+```
+
+```ts
+import { $chunk } from "@uchihori/utilities/array";
+
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const chunkedNumbers = $chunk(numbers, 3);
+console.log(chunkedNumbers); // Output: [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+```
+
+```ts
+import { $nonNull } from "@uchihori/utilities/array";
+
+const arrayWithNulls = [1, undefined, 2, null, 3];
+const nonNullArray = $nonNull(arrayWithNulls);
+console.log(nonNullArray); // Output: [1, 2, 3]
+```
+
+```ts
+import { $concat } from "@uchihori/utilities/array";
+
+const array1 = [1, 2, 3];
+const array2 = [4, 5, 6];
+const concatenatedArray = $concat(array1, array2);
+console.log(concatenatedArray); // Output: [1, 2, 3, 4, 5, 6]
+```
+
+```ts
+import { $reverse } from "@uchihori/utilities/array";
+
+const numbers = [1, 2, 3, 4, 5];
+const reversedNumbers = $reverse(numbers);
+console.log(reversedNumbers); // Output: [5, 4, 3, 2, 1]
+```
+
+```ts
+import { $fill } from "@uchihori/utilities/array";
+
+const filledArray = $fill("x", 5);
+console.log(filledArray); // Output: ['x', 'x', 'x', 'x', 'x']
+```
+
+```ts
+import { $fromPairs } from "@uchihori/utilities/array";
+
+const pairs = [["a", 1], ["b", 2], ["c", 3]];
+const obj = $fromPairs(pairs);
+console.log(obj); // Output: { a: 1, b: 2, c: 3 }
+```
+
+## types
+
+```ts
+import type { IsTuple } from "./types.ts";
+type ExampleType = IsTuple<[1, 2, 3]>; // true
+type AnotherExampleType = IsTuple<number[]>; // false
+```
+
+```ts
+import type { RemoveNElements } from "./types.ts";
+type DroppedTuple = RemoveNElements<[1, 2, 3, 4, 5], 2>; // [3, 4, 5]
+```
+
+```ts
+import type { Slice } from "./types.ts";
+type SlicedTuple = Slice<[1, 2, 3, 4, 5], 2>; // [3, 4, 5]
+type SlicedArray = Slice<number[], 2>; // number[]
+```
+
+```ts
+import type { Reverse } from "./types.ts";
+
+type ReversedTuple = Reverse<[1, "two", true]>; // [true, 'two', 1]
+type ReversedArray = Reverse<number[]>; // number[]
+```
+
+```ts
+import type { RemoveNElementsRight } from "./types.ts";
+
+type DroppedFromRight = RemoveNElementsRight<[1, "two", true, 42, "five"], 2>; // [1, 'two', true]
+```
+
+```ts
+import type { SliceRight } from "./types.ts";
+
+type SlicedFromRight = SliceRight<[1, "two", true, 42, "five"], 2>; // [1, 'two', true]
+```
+
+```ts
+import type { FillArray } from "./types.ts";
+
+// Generates a new array or tuple type with the specified length `N` and element type `E`. Returns an exact tuple type if the length is 10 or less, otherwise returns a general array type `E[]`.
+type FilledTuple = FillArray<3, boolean>; // [boolean, boolean, boolean]
+```
+
+```ts
+import type { Pair } from "./types.ts";
+
+type ExamplePair = Pair<string, number>; // [string, number]
+```
+
+```ts
+import type { FromPairs } from "./types.ts";
+
+type ObjectFromPairs = FromPairs<[["a", 1], ["b", 2]]>; // { a: 1, b: 2 }
 ```
