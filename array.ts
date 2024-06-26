@@ -101,13 +101,14 @@ export const $chunk = <T>(array: T[], size: number = 1): T[][] => {
     throw new Error("expected a number for a second argument");
   }
 
-  return array.reduce<T[][]>(
-    (arr, item, idx) =>
-      idx % size === 0
-        ? [...arr, [item]]
-        : [...arr.slice(0, -1), [...arr.slice(-1)[0], item]],
-    [],
-  );
+  return array.reduce<T[][]>((arr, item, idx) => {
+    if (idx % size === 0) {
+      arr.push([item]);
+    } else {
+      arr[arr.length - 1].push(item);
+    }
+    return arr;
+  }, []);
 };
 
 /**
