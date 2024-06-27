@@ -1,0 +1,30 @@
+name: Bug Report
+description: Report your issues here
+title: 'Bug: '
+body:
+  - type: textarea
+    id: overview
+    attributes:
+      label: Overview
+      description: |
+        Please describe the overview of the issue.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: |
+        Please describe the environment where the issue can be reproduced.
+        Example:
+            Browsers
+            Deno
+            Node.js
+            Cloudflare Workers
+            Bun
+    validations:
+      required: true
+  - type: textarea
+    id: supplement
+    attributes:
+      label: Additional Information
