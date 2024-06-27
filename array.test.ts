@@ -7,6 +7,7 @@ import {
   $fromPairs,
   $groupBy,
   $nonNull,
+  $removeItems,
   $reverse,
   $unique,
 } from "./array.ts";
@@ -664,5 +665,49 @@ Deno.test("$fromPairs with invalid arguments", () => {
     // @ts-ignore
     () => $fromPairs([[1], [2], 3]),
     "expected each element to be a tuple for key and value",
+  );
+});
+
+Deno.test("$removeItems", () => {
+  const test1 = $removeItems([1, 2, 3, 4, 5], 2, 4);
+  assertEquals(test1, [1, 3, 5]);
+
+  const test2 = $removeItems([1, "2", "3", "4", "5"], "2", "4");
+  assertEquals(test2, [1, "3", "5"]);
+
+  const test3 = $removeItems([1, 2, 3] as const, 2);
+  assertEquals(test3, [1, 3]);
+
+  const test4 = $removeItems(["1", "2", "3", "4", "5"], "2", "4");
+  assertEquals(test4, ["1", "3", "5"]);
+});
+
+Deno.test("$removeItems with invalid arguments", () => {
+  assertThrows(
+    // deno-lint-ignore ban-ts-comment
+    // @ts-ignore
+    () => $removeItems(null, 1),
+    "expected an array for a first argument",
+  );
+
+  assertThrows(
+    // deno-lint-ignore ban-ts-comment
+    // @ts-ignore
+    () => $removeItems(undefined, 1),
+    "expected an array for a first argument",
+  );
+
+  assertThrows(
+    // deno-lint-ignore ban-ts-comment
+    // @ts-ignore
+    () => $removeItems("string", 1),
+    "expected an array for a first argument",
+  );
+
+  assertThrows(
+    // deno-lint-ignore ban-ts-comment
+    // @ts-ignore
+    () => $removeItems(123, 1),
+    "expected an array for a first argument",
   );
 });

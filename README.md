@@ -178,6 +178,26 @@ const obj = $fromPairs(pairs);
 console.log(obj); // Output: { a: 1, b: 2, c: 3 }
 ```
 
+```ts
+import { $removeItems } from "@uchihori/utilities/array";
+
+const numbers = [1, 2, 3, 4, 5];
+const filteredNumbers = $removeItems(numbers, 2, 4);
+console.log(filteredNumbers); // Output: [1, 3, 5]
+
+const mixedArray = [1, "2", "3", "4", "5"];
+const filteredMixed = $removeItems(mixedArray, "2", "4");
+console.log(filteredMixed); // Output: [1, "3", "5"]
+
+const tupleArray = [1, 2, 3] as const;
+const filteredTuple = $removeItems(tupleArray, 2);
+console.log(filteredTuple); // Output: [1, 3] with type
+
+const stringArray = ["1", "2", "3", "4", "5"];
+const filteredString = $removeItems(stringArray, "2", "4");
+console.log(filteredString); // Output: ["1", "3", "5"]
+```
+
 ## types
 
 ```ts
