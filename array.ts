@@ -294,24 +294,6 @@ export const $fromPairs = <T extends ReadonlyArray<Pair<PropertyKey, unknown>>>(
   }, {} as FromPairs<T>);
 };
 
-/**
- * Removes specified items from an array of primitive values.
- *
- * @template T - The type of the input array (must be an array of primitive values).
- * @template U - The type of the items to remove (must be a primitive value).
- *
- * @param {T} array - The input array to remove items from.
- * @param {...U[]} itemsToRemove - The items to remove from the array.
- *
- * @returns {RemoveItems<T, U>} A new array with the specified items removed.
- *
- * @example
- * const result = $removeItems([1, 2, 3, 4, 5], 2, 4);
- * console.log(result); // [1, 3, 5]
- *
- * @throws {Error} If the first argument is not an array.
- * @remarks This function may not correctly filter out non-primitive values.
- */
 export const $removeItems = <
   T extends Primitive[],
   U extends Primitive,
@@ -322,8 +304,11 @@ export const $removeItems = <
   if (!Array.isArray(array)) {
     throw new Error("expected an array for a first argument");
   }
-  return array.filter((v) => !itemsToRemove.includes(v as U)) as RemoveItems<
-    T,
-    U
-  >;
+  let result = [];
+  for (const v of array) {
+    if (!itemsToRemove.includes(v)) {
+      result.push(v);
+    }
+  }
+  return result as RemoveItems<T, U>;
 };
