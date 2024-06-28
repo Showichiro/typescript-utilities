@@ -4,7 +4,7 @@
 [![JSR](https://jsr.io/badges/@showichiro/utilities)](https://jsr.io/@showichiro/utilities)
 
 In this repository, we provide utility functions related to functions, objects,
-, arrays and types. These functions are written in TypeScript and designed to
+,arrays and types. These functions are written in TypeScript and designed to
 maintain type safety.
 
 ## functions
