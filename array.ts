@@ -366,7 +366,5 @@ export const $union = <T extends Primitive>(...arrays: T[][]): T[] => {
   if (!arrays.every((arr) => Array.isArray(arr))) {
     throw new Error("expected all arguments to be arrays");
   }
-  return arrays.reduce<T[]>((prev, current) => {
-    return [...prev, ...current.filter((v) => !prev.includes(v))];
-  }, []);
+  return Array.from(new Set(arrays.flat()));
 };
