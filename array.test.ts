@@ -6,9 +6,11 @@ import {
   $fill,
   $fromPairs,
   $groupBy,
+  $intersection,
   $nonNull,
   $removeItems,
   $reverse,
+  $union,
   $unique,
 } from "./array.ts";
 import { assertEquals } from "@std/assert/assert-equals";
@@ -709,5 +711,150 @@ Deno.test("$removeItems with invalid arguments", () => {
     // @ts-ignore
     () => $removeItems(123, 1),
     "expected an array for a first argument",
+  );
+});
+
+Deno.test("$intersection", () => {
+  const array1 = [1, 2, 3];
+  const array2 = [2, 3, 4];
+  const expectedIntersection = [2, 3];
+  const result = $intersection([array1, array2]);
+  assertEquals(
+    result,
+    expectedIntersection,
+  );
+
+  const array3: never[] = [];
+  const array4 = [1, 2, 3];
+  const expectedIntersectionEmpty: never[] = [];
+  const resultEmpty = $intersection([array3, array4]);
+  assertEquals(
+    resultEmpty,
+    expectedIntersectionEmpty,
+  );
+
+  const array5 = ["a", "b", "c"];
+  const array6 = ["b", "c", "d"];
+  const expectedIntersectionStrings = ["b", "c"];
+  const resultStrings = $intersection([array5, array6]);
+  assertEquals(
+    resultStrings,
+    expectedIntersectionStrings,
+  );
+
+  const array7 = [true, false, true];
+  const array8 = [false, true, false];
+  const expectedIntersectionBooleans = [true, false, true];
+  const resultBooleans = $intersection([array7, array8]);
+  assertEquals(
+    resultBooleans,
+    expectedIntersectionBooleans,
+  );
+
+  const array9 = [1.1, 2.2, 3.3];
+  const array10 = [2.2, 3.3, 4.4];
+  const expectedIntersectionFloats = [2.2, 3.3];
+  const resultFloats = $intersection([array9, array10]);
+  assertEquals(
+    resultFloats,
+    expectedIntersectionFloats,
+  );
+});
+
+Deno.test("$intersecion with invalid arguments", () => {
+  const nonArrayOfArrays = [1, 2, 3];
+  assertThrows(
+    () => {
+      // deno-lint-ignore ban-ts-comment
+      // @ts-ignore
+      $intersection(nonArrayOfArrays);
+    },
+    Error,
+    "expected each element to be an array",
+  );
+});
+
+Deno.test("$union", () => {
+  const array1 = [1, 2, 3];
+  const array2 = [2, 3, 4];
+  const expectedUnion = [1, 2, 3, 4];
+  const result = $union(array1, array2);
+  assertEquals(
+    result,
+    expectedUnion,
+  );
+
+  const array3: string[] = ["a", "b", "c"];
+  const array4: string[] = ["b", "c", "d"];
+  const expectedUnionStrings = ["a", "b", "c", "d"];
+  const resultStrings = $union(array3, array4);
+  assertEquals(
+    resultStrings,
+    expectedUnionStrings,
+  );
+
+  const array5 = [true, false, true];
+  const array6 = [false, true, false];
+  const expectedUnionBooleans = [true, false, true];
+  const resultBooleans = $union(array5, array6);
+  assertEquals(
+    resultBooleans,
+    expectedUnionBooleans,
+  );
+
+  const array7 = [1.1, 2.2, 3.3];
+  const array8 = [2.2, 3.3, 4.4];
+  const expectedUnionFloats = [1.1, 2.2, 3.3, 4.4];
+  const resultFloats = $union(array7, array8);
+  assertEquals(
+    resultFloats,
+    expectedUnionFloats,
+  );
+
+  const array9 = ["x", "y"];
+  const array10 = ["y", "z"];
+  const array11 = ["a", "b"];
+  const expectedUnionMultiple = ["x", "y", "z", "a", "b"];
+  const resultMultiple = $union(array9, array10, array11);
+  assertEquals(
+    resultMultiple,
+    expectedUnionMultiple,
+  );
+});
+
+Deno.test("$union with invalid arguments", () => {
+  assertThrows(
+    // deno-lint-ignore ban-ts-comment
+    // @ts-expect-error
+    () => $union(null),
+    "expected arrays as arguments",
+  );
+
+  assertThrows(
+    // deno-lint-ignore ban-ts-comment
+    // @ts-expect-error
+    () => $union(undefined),
+    "expected arrays as arguments",
+  );
+
+  assertThrows(
+    // deno-lint-ignore ban-ts-comment
+    // @ts-expect-error
+    () => $union(123),
+    "expected arrays as arguments",
+  );
+
+  assertThrows(
+    // deno-lint-ignore ban-ts-comment
+    // @ts-expect-error
+    () => $union("string"),
+    "expected arrays as arguments",
+  );
+
+  assertThrows(
+    // deno-lint-ignore ban-ts-comment
+    // @ts-expect-error
+    () => $union([1, 2, 3], null),
+    "expected arrays as arguments",
   );
 });

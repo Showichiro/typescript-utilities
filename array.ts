@@ -327,3 +327,46 @@ export const $removeItems = <
     U
   >;
 };
+
+/**
+ * Computes the intersection of multiple arrays.
+ *
+ * @template T
+ * @param {T[][]} array - The array of arrays to find the intersection of.
+ * @returns {T[]} A new array containing elements common to all input arrays.
+ * @throws {Error} If the first argument is not an array of arrays.
+ */
+export const $intersection = <T extends unknown>(array: T[][]): T[] => {
+  if (!Array.isArray(array)) {
+    throw new Error("expected an array of arrays for a first argument");
+  }
+
+  if (array.length === 0) {
+    return [];
+  }
+
+  if (!array.every((subArray) => Array.isArray(subArray))) {
+    throw new Error("expected each element to be an array");
+  }
+
+  return array.reduce((a, b) => a.filter((c) => b.includes(c)));
+};
+
+/**
+ * Computes the union of multiple arrays, retaining unique elements.
+ *
+ * @template T
+ * @param {...T[][]} arrays - The arrays to compute the union of.
+ * @returns {T[]} A new array containing the union of the unique elements from the input arrays.
+ * @throws {Error} If any argument is not an array.
+ * @remarks This function may not correctly handle non-primitive types.
+ */
+export const $union = <T extends Primitive>(...arrays: T[][]): T[] => {
+  // validation
+  if (!arrays.every((arr) => Array.isArray(arr))) {
+    throw new Error("expected all arguments to be arrays");
+  }
+  return arrays.reduce<T[]>((prev, current) => {
+    return [...prev, ...current.filter((v) => !prev.includes(v))];
+  }, []);
+};
