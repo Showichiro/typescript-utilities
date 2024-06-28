@@ -336,7 +336,7 @@ export const $removeItems = <
  * @returns {T[]} A new array containing elements common to all input arrays.
  * @throws {Error} If the first argument is not an array of arrays.
  */
-export const $intersection = <T extends unknown>(array: T[][]): T[] => {
+export const $intersection = <T>(array: T[][]): T[] => {
   if (!Array.isArray(array)) {
     throw new Error("expected an array of arrays for a first argument");
   }
@@ -349,7 +349,7 @@ export const $intersection = <T extends unknown>(array: T[][]): T[] => {
     throw new Error("expected each element to be an array");
   }
 
-  return array.reduce((a, b) => a.filter((c) => b.includes(c)));
+  return array.reduce((a, b) => a.filter(Set.prototype.has, new Set(b)));
 };
 
 /**

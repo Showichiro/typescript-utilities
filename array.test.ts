@@ -795,7 +795,7 @@ Deno.test("$union", () => {
 
   const array5 = [true, false, true];
   const array6 = [false, true, false];
-  const expectedUnionBooleans = [true, false, true];
+  const expectedUnionBooleans = [true, false];
   const resultBooleans = $union(array5, array6);
   assertEquals(
     resultBooleans,
