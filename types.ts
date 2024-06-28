@@ -157,3 +157,62 @@ export type Pair<K extends PropertyKey, V> = readonly [K, V];
 export type FromPairs<T extends ReadonlyArray<Pair<PropertyKey, unknown>>> = {
   [K in T[number][0]]: Extract<T[number], Pair<K, unknown>>[1];
 };
+
+/**
+ * Removes items from a tuple that are assignable to a specified type.
+ *
+ * @template T - The tuple type from which to remove items.
+ * @template U - The type of items to remove.
+ *
+ * @remarks
+ * This type recursively evaluates the tuple type T and removes items
+ * that are of the type U.
+ *
+ * @example
+ * type OriginalTuple = [1, 'two', true, 42];
+ * type FilteredTuple = TupleRemoveItems<OriginalTuple, number>; // ['two', true]
+ *
+ * @returns A new tuple type without the items of type U.
+ */
+export type TupleRemoveItems<
+  T extends readonly Primitive[],
+  U extends Primitive,
+> = T extends [infer F, ...infer R]
+  ? F extends U
+    ? TupleRemoveItems<R extends readonly Primitive[] ? R : never, U>
+  : [F, ...TupleRemoveItems<R extends readonly Primitive[] ? R : never, U>]
+  : T;
+
+/**
+ * Removes items from an array or tuple that are assignable to a specified type.
+ *
+ * @template T - The array or tuple type from which to remove items.
+ * @template U - The type of items to remove.
+ *
+ * @remarks
+ * This type does the following:
+ * 1. If T is a tuple (determined by IsTuple<T>), it uses TupleRemoveItems<T, U>
+ *    to remove items of type U from the tuple.
+ * 2. If T is not a tuple, it returns T unmodified.
+ *
+ * This type is useful for removing specific types from arrays or tuples, while preserving
+ * the structure for tuples.
+ *
+ * @example
+ * type ArrayType = (string | number | boolean)[];
+ * type ResultArray = RemoveItems<ArrayType, boolean>; // (string | number | boolean)[]
+ *
+ * type TupleType = [1, 'two', true, 42, 'five'];
+ * type ResultTuple = RemoveItems<TupleType, number>; // ['two', true, 'five']
+ *
+ * @returns A new type without the items of type U, preserving tuple structure if applicable,
+ *          or T unmodified if T is not a tuple.
+ */
+export type RemoveItems<T extends Primitive[], U extends Primitive> =
+  IsTuple<T> extends true ? TupleRemoveItems<T, U>
+    : T;
+
+/**
+ * Represents primitive types in TypeScript.
+ */
+export type Primitive = string | number | boolean | symbol | null | undefined;

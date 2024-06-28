@@ -2,6 +2,8 @@ import type {
   FillArray,
   FromPairs,
   Pair,
+  Primitive,
+  RemoveItems,
   Reverse,
   Slice,
   SliceRight,
@@ -290,4 +292,79 @@ export const $fromPairs = <T extends ReadonlyArray<Pair<PropertyKey, unknown>>>(
   return pairs.reduce<FromPairs<T>>((obj, [key, value]) => {
     return { ...obj, [key]: value };
   }, {} as FromPairs<T>);
+};
+
+/**
+ * Removes specified items from an array of primitive values.
+ *
+ * @template T - The type of the input array (must be an array of primitive values).
+ * @template U - The type of the items to remove (must be a primitive value).
+ *
+ * @param {T} array - The input array to remove items from.
+ * @param {...U[]} itemsToRemove - The items to remove from the array.
+ *
+ * @returns {RemoveItems<T, U>} A new array with the specified items removed.
+ *
+ * @example
+ * const result = $removeItems([1, 2, 3, 4, 5], 2, 4);
+ * console.log(result); // [1, 3, 5]
+ *
+ * @throws {Error} If the first argument is not an array.
+ * @remarks This function may not correctly filter out non-primitive values.
+ */
+export const $removeItems = <
+  T extends Primitive[],
+  U extends Primitive,
+>(
+  array: T,
+  ...itemsToRemove: U[]
+): RemoveItems<T, U> => {
+  if (!Array.isArray(array)) {
+    throw new Error("expected an array for a first argument");
+  }
+  return array.filter((v) => !itemsToRemove.includes(v as U)) as RemoveItems<
+    T,
+    U
+  >;
+};
+
+/**
+ * Computes the intersection of multiple arrays.
+ *
+ * @template T
+ * @param {T[][]} array - The array of arrays to find the intersection of.
+ * @returns {T[]} A new array containing elements common to all input arrays.
+ * @throws {Error} If the first argument is not an array of arrays.
+ */
+export const $intersection = <T>(array: T[][]): T[] => {
+  if (!Array.isArray(array)) {
+    throw new Error("expected an array of arrays for a first argument");
+  }
+
+  if (array.length === 0) {
+    return [];
+  }
+
+  if (!array.every((subArray) => Array.isArray(subArray))) {
+    throw new Error("expected each element to be an array");
+  }
+
+  return array.reduce((a, b) => a.filter(Set.prototype.has, new Set(b)));
+};
+
+/**
+ * Computes the union of multiple arrays, retaining unique elements.
+ *
+ * @template T
+ * @param {...T[][]} arrays - The arrays to compute the union of.
+ * @returns {T[]} A new array containing the union of the unique elements from the input arrays.
+ * @throws {Error} If any argument is not an array.
+ * @remarks This function may not correctly handle non-primitive types.
+ */
+export const $union = <T extends Primitive>(...arrays: T[][]): T[] => {
+  // validation
+  if (!arrays.every((arr) => Array.isArray(arr))) {
+    throw new Error("expected all arguments to be arrays");
+  }
+  return Array.from(new Set(arrays.flat()));
 };

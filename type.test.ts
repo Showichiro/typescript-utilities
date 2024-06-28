@@ -3,11 +3,13 @@ import type {
   FillArray,
   FromPairs,
   IsTuple,
+  RemoveItems,
   RemoveNElements,
   RemoveNElementsRight,
   Reverse,
   Slice,
   SliceRight,
+  TupleRemoveItems,
 } from "./types.ts";
 
 Deno.test("IsTuple", () => {
@@ -117,5 +119,23 @@ Deno.test("FillArray", () => {
 Deno.test("FromPairs", () => {
   type _ = AssertTrue<
     IsExact<FromPairs<[["a", 1], [2, "b"]]>, { a: 1; 2: "b" }>
+  >;
+});
+
+Deno.test("TupleRemoveItems", () => {
+  type _ = AssertTrue<IsExact<TupleRemoveItems<[1, 2, 3], 3>, [1, 2]>>;
+  type __ = AssertTrue<IsExact<TupleRemoveItems<[1, 2, 3], 2 | 3>, [1]>>;
+  type ___ = AssertTrue<
+    IsExact<TupleRemoveItems<[1, 2, "3"], number>, ["3"]>
+  >;
+});
+
+Deno.test("RemoveItems", () => {
+  type _ = AssertTrue<IsExact<RemoveItems<[1, 2, 3], 2>, [1, 3]>>;
+  type __ = AssertTrue<IsExact<RemoveItems<[1, 2, 3], 2 | 3>, [1]>>;
+  type ___ = AssertTrue<IsExact<RemoveItems<[1, 2, 3], 1 | 2 | 3>, []>>;
+  type ____ = AssertTrue<IsExact<RemoveItems<number[], 1 | 2 | 3>, number[]>>;
+  type _____ = AssertTrue<
+    IsExact<RemoveItems<(number | string)[], 1 | 2 | 3>, (number | string)[]>
   >;
 });

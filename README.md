@@ -4,7 +4,7 @@
 [![JSR](https://jsr.io/badges/@showichiro/utilities)](https://jsr.io/@showichiro/utilities)
 
 In this repository, we provide utility functions related to functions, objects,
-, arrays and types. These functions are written in TypeScript and designed to
+,arrays and types. These functions are written in TypeScript and designed to
 maintain type safety.
 
 ## functions
@@ -176,6 +176,73 @@ import { $fromPairs } from "@uchihori/utilities/array";
 const pairs = [["a", 1], ["b", 2], ["c", 3]];
 const obj = $fromPairs(pairs);
 console.log(obj); // Output: { a: 1, b: 2, c: 3 }
+```
+
+```ts
+import { $removeItems } from "@uchihori/utilities/array";
+
+const numbers = [1, 2, 3, 4, 5];
+const filteredNumbers = $removeItems(numbers, 2, 4);
+console.log(filteredNumbers); // Output: [1, 3, 5]
+
+const mixedArray = [1, "2", "3", "4", "5"];
+const filteredMixed = $removeItems(mixedArray, "2", "4");
+console.log(filteredMixed); // Output: [1, "3", "5"]
+
+const tupleArray = [1, 2, 3] as const;
+const filteredTuple = $removeItems(tupleArray, 2);
+console.log(filteredTuple); // Output: [1, 3] with type
+
+const stringArray = ["1", "2", "3", "4", "5"];
+const filteredString = $removeItems(stringArray, "2", "4");
+console.log(filteredString); // Output: ["1", "3", "5"]
+```
+
+```ts
+import { $intersection } from "@uchihori/utilities/array";
+
+const array1 = [1, 2, 3];
+const array2 = [2, 3, 4];
+const intersectionResult = $intersection([array1, array2]);
+console.log(intersectionResult); // Output: [2, 3]
+
+const array3: string[] = ["a", "b", "c"];
+const array4: string[] = ["b", "c", "d"];
+const intersectionStrings = $intersection([array3, array4]);
+console.log(intersectionStrings); // Output: ["b", "c"]
+
+const array5 = [true, false, true];
+const array6 = [false, true, false];
+const intersectionBooleans = $intersection([array5, array6]);
+console.log(intersectionBooleans); // Output: [false, true]
+
+const array7 = [1.1, 2.2, 3.3];
+const array8 = [2.2, 3.3, 4.4];
+const intersectionFloats = $intersection([array7, array8]);
+console.log(intersectionFloats); // Output: [2.2, 3.3]
+```
+
+```ts
+import { $union } from "@uchihori/utilities/array";
+const array1 = [1, 2, 3];
+const array2 = [2, 3, 4];
+const unionResult = $union(array1, array2);
+console.log(unionResult); // Output: [1, 2, 3, 4]
+
+const array3: string[] = ["a", "b", "c"];
+const array4: string[] = ["b", "c", "d"];
+const unionStrings = $union(array3, array4);
+console.log(unionStrings); // Output: ["a", "b", "c", "d"]
+
+const array5 = [true, false, true];
+const array6 = [false, true, false];
+const unionBooleans = $union(array5, array6);
+console.log(unionBooleans); // Output: [true, false]
+
+const array7 = [1.1, 2.2, 3.3];
+const array8 = [2.2, 3.3, 4.4];
+const unionFloats = $union(array7, array8);
+console.log(unionFloats); // Output: [1.1, 2.2, 3.3, 4.4]
 ```
 
 ## types
