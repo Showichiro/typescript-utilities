@@ -1,6 +1,7 @@
 import {
   $chunk,
   $concat,
+  $countBy,
   $drop,
   $dropRight,
   $fill,
@@ -8,6 +9,7 @@ import {
   $groupBy,
   $intersection,
   $nonNull,
+  $orderBy,
   $removeItems,
   $reverse,
   $union,
@@ -856,5 +858,113 @@ Deno.test("$union with invalid arguments", () => {
     // @ts-expect-error
     () => $union([1, 2, 3], null),
     "expected arrays as arguments",
+  );
+});
+
+Deno.test("$countBy", () => {
+  const test1 = $countBy([1.1, 1.2, 1.3, 2, 3, 3], Math.floor);
+  assertEquals(test1, {
+    "1": 3,
+    "2": 1,
+    "3": 2,
+  });
+  const test2 = $countBy(["apple", "banana", "cherry"], (v) => v.length);
+  assertEquals(test2, {
+    "5": 1,
+    "6": 2,
+  });
+  const test3 = $countBy(
+    [{ status: "done", name: "abc" }, {
+      status: "done",
+      name: "abc",
+    }, { status: "pending", name: "abc" }] as const,
+    (v) => v.status,
+  );
+  assertEquals(test3, { done: 2, pending: 1 });
+  const test4 = $countBy([], (a) => a);
+  assertEquals(test4, {});
+});
+
+Deno.test("$countBy with invalid arguments", () => {
+  assertThrows(
+    // deno-lint-ignore ban-ts-comment
+    // @ts-expect-error
+    () => $countBy("string", () => {}),
+    "expected an array for the first argument",
+  );
+  assertThrows(
+    // deno-lint-ignore ban-ts-comment
+    // @ts-expect-error
+    () => $countBy([], "not a function"),
+    "expected a function for the second argument",
+  );
+});
+
+Deno.test("$orderBy", () => {
+  const test1 = $orderBy([{ name: "a", age: 2 }, { name: "b", age: 1 }], [
+    "name",
+    "asc",
+  ]);
+  assertEquals(test1, [
+    { name: "a", age: 2 },
+    { name: "b", age: 1 },
+  ]);
+  const test2 = $orderBy([{ name: "a", age: 2 }, { name: "b", age: 1 }], [
+    "name",
+    "desc",
+  ]);
+  assertEquals(test2, [
+    { name: "b", age: 1 },
+    { name: "a", age: 2 },
+  ]);
+
+  const test3 = $orderBy([{ name: "a", age: 2, id: 1 }, {
+    name: "b",
+    age: 2,
+    id: 2,
+  }, {
+    name: "b",
+    age: 2,
+    id: 3,
+  }], [
+    "name",
+    "asc",
+  ], ["id", "desc"]);
+
+  assertEquals(test3, [{ name: "a", age: 2, id: 1 }, {
+    name: "b",
+    age: 2,
+    id: 3,
+  }, {
+    name: "b",
+    age: 2,
+    id: 2,
+  }]);
+});
+
+Deno.test("$orderBy with invalid arguments", () => {
+  assertThrows(
+    // deno-lint-ignore ban-ts-comment
+    // @ts-expect-error
+    () => $orderBy("string", ["name", "asc"]),
+    "expected an array for the first argument",
+  );
+  assertThrows(
+    // deno-lint-ignore ban-ts-comment
+    // @ts-expect-error
+    () => $orderBy([], "not a tuple"),
+    "expected a valid key for sorting",
+  );
+  assertThrows(
+    // deno-lint-ignore ban-ts-comment
+    // @ts-expect-error
+    () => $orderBy([{ name: "a" }], [null, "asc"]),
+    "expected a valid key for sorting",
+  );
+  assertThrows(
+    // deno-lint-ignore ban-ts-comment
+    // @ts-expect-error
+    () => $orderBy([{ name: "a" }], ["name", "not order"]),
+    "expected order to be either 'asc' or 'desc'",
   );
 });

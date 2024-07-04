@@ -245,6 +245,52 @@ const unionFloats = $union(array7, array8);
 console.log(unionFloats); // Output: [1.1, 2.2, 3.3, 4.4]
 ```
 
+```ts
+import { $countBy } from "@uchihori/utilities/array";
+
+const countByFloor = $countBy([1.1, 1.2, 1.3, 2, 3, 3], Math.floor);
+console.log(countByFloor); // Output: { "1": 3, "2": 1, "3": 2, }
+
+const countByLength = $countBy(["apple", "banana", "cherry"], (v) => v.length);
+console.log(coundByLength); // Output: {"5": 1, "6": 2, }
+
+const users = [
+  { id: 1, role: "admin" },
+  { id: 2, role: "user" },
+  { id: 3, role: "user" },
+];
+const countByRole = $countBy(users, (user) => user.role);
+console.log(countByRole); // Output: { 'admin': 1, 'user': 2 }
+```
+
+```ts
+import { $orderBy } from "@uchihori/utilities/array";
+
+const orderByNameAsc = $orderBy(
+  [{ name: "a", age: 2 }, { name: "b", age: 1 }],
+  [
+    "name",
+    "asc",
+  ],
+);
+console.log(orderByNameAsc); // Output: [{ name: "a", age: 2 },{ name: "b", age: 1 }]
+
+const orderByNameAscAndIdDesc = $orderBy([{ name: "a", age: 2, id: 1 }, {
+  name: "b",
+  age: 2,
+  id: 2,
+}, {
+  name: "b",
+  age: 2,
+  id: 3,
+}], [
+  "name",
+  "asc",
+], ["id", "desc"]);
+
+console.log(orderByNameAscAndIdDesc); // Output: [{ name: "a", age: 2, id: 1 }, { name: "b", age: 2, id: 3 }, {   name: "b", age: 2, id: 2 }]
+```
+
 ## types
 
 ```ts
