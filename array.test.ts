@@ -955,4 +955,16 @@ Deno.test("$orderBy with invalid arguments", () => {
     () => $orderBy([], "not a tuple"),
     "expected a valid key for sorting",
   );
+  assertThrows(
+    // deno-lint-ignore ban-ts-comment
+    // @ts-expect-error
+    () => $orderBy([{ name: "a" }], [null, "asc"]),
+    "expected a valid key for sorting",
+  );
+  assertThrows(
+    // deno-lint-ignore ban-ts-comment
+    // @ts-expect-error
+    () => $orderBy([{ name: "a" }], ["name", "not order"]),
+    "expected order to be either 'asc' or 'desc'",
+  );
 });
