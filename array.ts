@@ -388,13 +388,15 @@ export const $countBy = <T, E extends PropertyKey>(
     throw new Error("expected a function for the second argument");
   }
 
-  return array.reduce<Record<E, number>>(
-    (prev, current) => {
-      const key = keyGenerator(current);
-      return { ...prev, [key]: (prev?.[key] ?? 0) + 1 };
-    },
-    {} as Record<E, number>,
-  );
+  return array.reduce<Record<E, number>>((prev, current) => {
+    const key = keyGenerator(current);
+    if (prev?.[key] == null) {
+      prev[key] = 1;
+    } else {
+      prev[key]++;
+    }
+    return prev;
+  }, {} as Record<E, number>);
 };
 
 /**
