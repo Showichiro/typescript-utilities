@@ -251,7 +251,7 @@ import { $countBy } from "@uchihori/utilities/array";
 const countByFloor = $countBy([1.1, 1.2, 1.3, 2, 3, 3], Math.floor);
 console.log(countByFloor); // Output: { "1": 3, "2": 1, "3": 2, }
 
-const coundByLength = $countBy(["apple", "banana", "cherry"], (v) => v.length);
+const countByLength = $countBy(["apple", "banana", "cherry"], (v) => v.length);
 console.log(coundByLength); // Output: {"5": 1, "6": 2, }
 
 const users = [
