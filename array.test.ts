@@ -12,6 +12,7 @@ import {
   $orderBy,
   $removeItems,
   $reverse,
+  $shuffle,
   $union,
   $unique,
 } from "./array.ts";
@@ -88,6 +89,59 @@ Deno.test("$groupBy", () => {
       3,
     ],
   });
+});
+
+Deno.test("$shuffle", () => {
+  const array = [1, 2, 3, 4, 5];
+  const shuffled = $shuffle([...array]);
+
+  // 長さが同じであることを確認
+  assertEquals(shuffled.length, array.length);
+
+  // すべての要素が含まれていることを確認
+  array.forEach((item) => {
+    assertEquals(shuffled.includes(item), true);
+  });
+
+  // 要素の出現回数が同じであることを確認
+  array.forEach((item) => {
+    assertEquals(
+      shuffled.filter((x) => x === item).length,
+      array.filter((x) => x === item).length,
+    );
+  });
+});
+
+Deno.test("$shuffle edge cases", () => {
+  // 空配列
+  assertEquals($shuffle([]), []);
+
+  // 1要素の配列
+  const singleElement = [1];
+  assertEquals($shuffle(singleElement), singleElement);
+});
+
+Deno.test("$shuffle with invalid arguments", () => {
+  assertThrows(
+    // deno-lint-ignore ban-ts-comment
+    // @ts-expect-error
+    () => $shuffle(null),
+    "expected an array for a first argument",
+  );
+
+  assertThrows(
+    // deno-lint-ignore ban-ts-comment
+    // @ts-expect-error
+    () => $shuffle(undefined),
+    "expected an array for a first argument",
+  );
+
+  assertThrows(
+    // deno-lint-ignore ban-ts-comment
+    // @ts-expect-error
+    () => $shuffle("not an array"),
+    "expected an array for a first argument",
+  );
 });
 
 Deno.test("$groupBy with invalid arguments", () => {

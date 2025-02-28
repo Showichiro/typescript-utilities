@@ -59,9 +59,7 @@ export const $unique = <T>(
   if (!Array.isArray(array)) {
     throw new Error("expected an array for a first argument");
   }
-  if (
-    uniqueKeyGenerator != null && typeof uniqueKeyGenerator !== "function"
-  ) {
+  if (uniqueKeyGenerator != null && typeof uniqueKeyGenerator !== "function") {
     throw new Error(
       "expected a function for a second argument or no second argument",
     );
@@ -141,10 +139,7 @@ export const $nonNull = <T>(array: T[]): NonNullable<T>[] => {
  * @throws {Error} If the first argument is not an array.
  * @throws {Error} If the second argument is not an array.
  */
-export const $concat = <T, E>(
-  array: T[],
-  ...values: E[]
-): (T | E)[] => {
+export const $concat = <T, E>(array: T[], ...values: E[]): (T | E)[] => {
   if (!Array.isArray(array)) {
     throw new Error("expected an array for a first argument");
   }
@@ -312,10 +307,7 @@ export const $fromPairs = <T extends ReadonlyArray<Pair<PropertyKey, unknown>>>(
  * @throws {Error} If the first argument is not an array.
  * @remarks This function may not correctly filter out non-primitive values.
  */
-export const $removeItems = <
-  T extends Primitive[],
-  U extends Primitive,
->(
+export const $removeItems = <T extends Primitive[], U extends Primitive>(
   array: T,
   ...itemsToRemove: U[]
 ): RemoveItems<T, U> => {
@@ -418,7 +410,8 @@ export const $orderBy = <T extends object, E extends [keyof T, "asc" | "desc"]>(
   }
   for (const [key, order] of orders) {
     if (
-      typeof key !== "string" && typeof key !== "number" &&
+      typeof key !== "string" &&
+      typeof key !== "number" &&
       typeof key !== "symbol"
     ) {
       throw new Error("expected a valid key for sorting");
@@ -439,4 +432,25 @@ export const $orderBy = <T extends object, E extends [keyof T, "asc" | "desc"]>(
     }
     return 0;
   });
+};
+
+/**
+ * Randomly shuffles the elements of an array using the Fisher-Yates algorithm.
+ *
+ * @template T
+ * @param {T[]} array - The array to be shuffled.
+ * @returns {T[]} A new array with the same elements in a random order.
+ * @throws {Error} If the first argument is not an array.
+ */
+export const $shuffle = <T>(array: T[]): T[] => {
+  if (!Array.isArray(array)) {
+    throw new Error("expected an array for a first argument");
+  }
+
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
 };

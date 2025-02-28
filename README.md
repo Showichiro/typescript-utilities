@@ -291,6 +291,26 @@ const orderByNameAscAndIdDesc = $orderBy([{ name: "a", age: 2, id: 1 }, {
 console.log(orderByNameAscAndIdDesc); // Output: [{ name: "a", age: 2, id: 1 }, { name: "b", age: 2, id: 3 }, {   name: "b", age: 2, id: 2 }]
 ```
 
+```ts
+import { $shuffle } from "@uchihori/utilities/array";
+
+const numbers = [1, 2, 3, 4, 5];
+const shuffledNumbers = $shuffle(numbers);
+console.log(shuffledNumbers); // Output: [3, 1, 5, 2, 4] (random order)
+
+// Original array remains unchanged
+console.log(numbers); // Output: [1, 2, 3, 4, 5]
+
+// Works with arrays of objects too
+const users = [
+  { id: 1, name: "Alice" },
+  { id: 2, name: "Bob" },
+  { id: 3, name: "Charlie" },
+];
+const shuffledUsers = $shuffle(users);
+console.log(shuffledUsers); // Output: Users in random order
+```
+
 ## types
 
 ```ts
