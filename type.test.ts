@@ -1,5 +1,6 @@
 import type { AssertTrue, IsExact } from "@std/testing/types";
 import type {
+  DeepMerge,
   FillArray,
   FromPairs,
   IsTuple,
@@ -138,4 +139,51 @@ Deno.test("RemoveItems", () => {
   type _____ = AssertTrue<
     IsExact<RemoveItems<(number | string)[], 1 | 2 | 3>, (number | string)[]>
   >;
+});
+
+Deno.test("DeepMerge", () => {
+  // 基本的なオブジェクトのマージ
+  type A = { a: number; b: string };
+  type B = { b: boolean; c: number };
+  type ExpectedAB = { a: number; b: boolean; c: number };
+  type _1 = AssertTrue<IsExact<DeepMerge<A, B>, ExpectedAB>>;
+
+  // ネストされたオブジェクトのマージ
+  type C = { a: number; b: { c: string; d: number } };
+  type D = { b: { d: boolean; e: string }; f: number };
+  type ExpectedCD = {
+    a: number;
+    b: { c: string; d: boolean; e: string };
+    f: number;
+  };
+  type _2 = AssertTrue<IsExact<DeepMerge<C, D>, ExpectedCD>>;
+
+  // 配列のマージ
+  type E = { a: number; b: string[]; c: { d: number[] } };
+  type F = { b: boolean[]; c: { d: string[] } };
+  type ExpectedEF = {
+    a: number;
+    b: Array<string | boolean>;
+    c: { d: Array<number | string> };
+  };
+  type _3 = AssertTrue<IsExact<DeepMerge<E, F>, ExpectedEF>>;
+
+  // プリミティブ値の上書き
+  type G = { a: number; b: string };
+  type H = { a: string };
+  type ExpectedGH = { a: string; b: string };
+  type _4 = AssertTrue<IsExact<DeepMerge<G, H>, ExpectedGH>>;
+
+  // 複雑なネストされたオブジェクトのマージ
+  type I = { a: { b: { c: number; d: string }; e: boolean }; f: number[] };
+  type J = { a: { b: { d: number; g: boolean }; h: string }; f: string[] };
+  type ExpectedIJ = {
+    a: {
+      b: { c: number; d: number; g: boolean };
+      e: boolean;
+      h: string;
+    };
+    f: Array<number | string>;
+  };
+  type _5 = AssertTrue<IsExact<DeepMerge<I, J>, ExpectedIJ>>;
 });

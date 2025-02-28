@@ -216,3 +216,40 @@ export type RemoveItems<T extends Primitive[], U extends Primitive> =
  * Represents primitive types in TypeScript.
  */
 export type Primitive = string | number | boolean | symbol | null | undefined;
+
+/**
+ * Deeply merges two types, recursively combining their properties.
+ *
+ * @template T - The first type to merge.
+ * @template U - The second type to merge.
+ *
+ * @remarks
+ * This type does the following:
+ * 1. If both T and U are objects, it recursively merges their properties.
+ * 2. If either T or U is not an object, U takes precedence.
+ * 3. For arrays, they are merged by creating a union of their element types.
+ *
+ * @example
+ * type A = { a: number; b: { c: string; } };
+ * type B = { b: { d: boolean; }; e: string; };
+ * type Merged = DeepMerge<A, B>;
+ * // { a: number; b: { c: string; d: boolean; }; e: string; }
+ *
+ * @returns A new type representing the deep merge of T and U.
+ */
+export type DeepMerge<T, U> = [T, U] extends [object, object]
+  ? T extends readonly (infer T1)[]
+    ? U extends readonly (infer U1)[] ? Array<T1 | U1> // 配列同士の場合は要素型をマージ
+    : U
+  : U extends readonly (infer U1)[] ? U
+  : {
+    [K in keyof T | keyof U]: K extends keyof U
+      ? K extends keyof T
+        ? T[K] extends object ? U[K] extends object ? DeepMerge<T[K], U[K]>
+          : U[K]
+        : U[K]
+      : U[K]
+      : K extends keyof T ? T[K]
+      : never;
+  }
+  : U;
