@@ -10,19 +10,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup Deno
-      uses: denoland/setup-deno@v1
-      with:
-        deno-version: 'v1.x'
+      - uses: actions/checkout@v4
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: "v1.x"
 
-    - run: deno test --allow-all --coverage=cov/
+      - run: deno test --allow-all --coverage=cov/
 
-    - run: deno coverage --lcov cov/ > cov.lcov
+      - run: deno coverage --lcov cov/ > cov.lcov
 
-    - name: Codecov
-      uses: codecov/codecov-action@v4
-      with:
-        file: ./cov.lcov
-        fail_ci_if_error: true
-        token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./cov.lcov
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
