@@ -16,8 +16,8 @@ import {
   $union,
   $unique,
 } from "./array.ts";
-import { assertEquals } from "jsr:@std/assert@^0.226.0/assert-equals";
-import { assertThrows } from "jsr:@std/assert@^0.226.0/assert-throws";
+import { assertEquals } from "@std/assert/assert-equals";
+import { assertThrows } from "@std/assert/assert-throws";
 
 Deno.test("$groupBy", () => {
   const test1 = $groupBy([{ type: "a", value: 1 }, { type: "a", value: 1 }, {
