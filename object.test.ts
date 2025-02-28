@@ -1,6 +1,6 @@
 import { assertEquals } from "@std/assert/assert-equals";
 import { assertThrows } from "@std/assert/assert-throws";
-import { $omit, $pick } from "./object.ts";
+import { $deepMerge, $omit, $pick } from "./object.ts";
 
 Deno.test("$pick", () => {
   const obj = { a: "1", b: 2 };
@@ -170,5 +170,71 @@ Deno.test("$omit with invalid arguments", () => {
     // @ts-ignore
     () => $omit({}, undefined),
     "expected an array for a second argument",
+  );
+});
+
+Deno.test("$deepMerge", () => {
+  // 基本的なオブジェクトのマージ
+  const obj1 = { a: 1, b: 2 };
+  const obj2 = { b: 3, c: 4 };
+  const merged1 = $deepMerge(obj1, obj2);
+  assertEquals(merged1, { a: 1, b: 3, c: 4 });
+
+  // ネストされたオブジェクトのマージ
+  const nested1 = { a: 1, b: { c: 2, d: 3 } };
+  const nested2 = { b: { d: 4, e: 5 }, f: 6 };
+  const mergedNested = $deepMerge(nested1, nested2);
+  assertEquals(mergedNested, { a: 1, b: { c: 2, d: 4, e: 5 }, f: 6 });
+
+  // 配列のマージ
+  const withArray1 = { a: 1, b: [1, 2, 3] };
+  const withArray2 = { b: [4, 5], c: 3 };
+  const mergedArray = $deepMerge(withArray1, withArray2);
+  assertEquals(mergedArray, { a: 1, b: [1, 2, 3, 4, 5], c: 3 });
+
+  // ネストされた複雑なオブジェクトのマージ
+  const complex1 = { a: 1, b: { c: 2, d: { e: 3, f: 4 } } };
+  const complex2 = { b: { d: { f: 5, g: 6 }, h: 7 } };
+  const mergedComplex = $deepMerge(complex1, complex2);
+  assertEquals(mergedComplex, {
+    a: 1,
+    b: { c: 2, d: { e: 3, f: 5, g: 6 }, h: 7 },
+  });
+
+  // 配列を含むネストされたオブジェクトのマージ
+  const arrayNested1 = { a: { b: [1, 2], c: 3 } };
+  const arrayNested2 = { a: { b: [4, 5], d: 6 } };
+  const mergedArrayNested = $deepMerge(arrayNested1, arrayNested2);
+  assertEquals(mergedArrayNested, { a: { b: [1, 2, 4, 5], c: 3, d: 6 } });
+});
+
+Deno.test("$deepMerge with invalid arguments", () => {
+  // 非オブジェクト引数に対するエラーハンドリング
+  assertThrows(
+    // deno-lint-ignore ban-ts-comment
+    // @ts-ignore
+    () => $deepMerge("not an object", {}),
+    "expected a non-null object for the first argument",
+  );
+
+  assertThrows(
+    // deno-lint-ignore ban-ts-comment
+    // @ts-ignore
+    () => $deepMerge({}, "not an object"),
+    "expected a non-null object for the second argument",
+  );
+
+  assertThrows(
+    // deno-lint-ignore ban-ts-comment
+    // @ts-ignore
+    () => $deepMerge(null, {}),
+    "expected a non-null object for the first argument",
+  );
+
+  assertThrows(
+    // deno-lint-ignore ban-ts-comment
+    // @ts-ignore
+    () => $deepMerge({}, null),
+    "expected a non-null object for the second argument",
   );
 });

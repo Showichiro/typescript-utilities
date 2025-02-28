@@ -60,6 +60,40 @@ const omitted = $omit(user, ["email"]); // omitted = { id: 1, name: 'John Doe' }
 console.log(omitted.email); // Output: undefined
 ```
 
+```ts
+import { $deepMerge } from "@uchihori/utilities/object";
+
+const target = {
+  a: 1,
+  b: {
+    c: "hello",
+    d: [1, 2],
+  },
+};
+
+const source = {
+  b: {
+    d: [3, 4],
+    e: true,
+  },
+  f: "world",
+};
+
+const merged = $deepMerge(target, source);
+console.log(merged);
+/* Output:
+{
+  a: 1,
+  b: {
+    c: "hello",
+    d: [1, 2, 3, 4],
+    e: true
+  },
+  f: "world"
+}
+*/
+```
+
 ## array
 
 ```ts
@@ -366,4 +400,37 @@ type ExamplePair = Pair<string, number>; // [string, number]
 import type { FromPairs } from "./types.ts";
 
 type ObjectFromPairs = FromPairs<[["a", 1], ["b", 2]]>; // { a: 1, b: 2 }
+```
+
+```ts
+import type { DeepMerge } from "./types.ts";
+
+type A = {
+  a: number;
+  b: {
+    c: string;
+    d: number[];
+  };
+};
+
+type B = {
+  b: {
+    d: boolean[];
+    e: boolean;
+  };
+  f: string;
+};
+
+type Merged = DeepMerge<A, B>;
+/* Result:
+{
+  a: number;
+  b: {
+    c: string;
+    d: (number | boolean)[];
+    e: boolean;
+  };
+  f: string;
+}
+*/
 ```
